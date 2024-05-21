@@ -20,8 +20,8 @@ export function PostCall() {
                     time: new Date(post.createdAt).toLocaleString(),
                     text: post.content,
                     img: post.image ? `http://localhost:3001/${post.image}` : '',
+                    document: post.document ? `http://localhost:3001/${post.document}` : '',
                     video: post.video ? `http://localhost:3001/${post.video}` : '',
-                    pdf: post.pdf ? `http://localhost:3001/${post.pdf}` : '',
                     upvote: post.upvotes.length,
                     devote: post.devotes.length,
                     share: post.shares.length,
@@ -89,9 +89,13 @@ export function Post(props) {
                         <video controls src={postdetail.video} className="w-full max-w-lg h-auto rounded-lg" />
                     </div>
                 )}
-                {postdetail.pdf && (
+                {postdetail.document && (
                     <div className="mt-4 flex justify-center">
-                        <embed src={postdetail.pdf} type="application/pdf" className="w-full max-w-lg h-auto rounded-lg" />
+                        {/* <embed src={postdetail.document} className="w-full max-w-lg h-auto rounded-lg" /> */}
+                        {/* <embed src={postdetail.document + "#toolbar=0"} className="w-full max-w-lg h-auto rounded-lg" /> */}
+
+                        <a href= {postdetail.document}>Your File</a>
+
                     </div>
                 )}
             </div>
