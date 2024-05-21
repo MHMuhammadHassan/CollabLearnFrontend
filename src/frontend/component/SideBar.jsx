@@ -8,9 +8,6 @@ const SidebarContext = createContext();
 
 export default function Sidebar({ children }) {
   const [expanded, setExpanded] = useState(true);
-  const OpenCreatePostModule = () => {
-        <CreatePostModal/>
-  }
 
   return (
     <aside className="h-screen flex flex-col">

@@ -1,49 +1,33 @@
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import img from '../../assets/person_icon.png';
 import img2 from '../../assets/options.png';
 import UV from '../../assets/upvote_icon.png';
 import DV from '../../assets/devote_icon.png';
 import share from '../../assets/share_icon.png';
-import postimg from '../../assets/post1.jpg';
 
 export function PostCall() {
-    const PostData = [
-        {
-            UserImg: img,
-            name: "Mr Afzal",
-            time: '4.45am 15/3/24',
-            text: 'Hello friends',
-            img: postimg,
-            upvote: 20,
-            devote: 20,
-            share: 2,
-            comment: 4,
-        },
-        {
-            UserImg: img,
-            name: "Abdul Rehman",
-            time: '5pm 15/3/24',
-            text: 'Welcome to our platform',
-            img: '',
-            upvote: 200,
-            devote: 0,
-            share: 5,
-            comment: 47,
-        },
-        {
-            UserImg: img,
-            name: "Mr Afzal",
-            time: '4.45 15/3/24',
-            text: 'Hello friends',
-            img: postimg,
-            upvote: 20,
-            devote: 20,
-            share: 2,
-            comment: 4,
-        },
-    ];
+    const [PostData, setPostData] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:3001/collablearn/user/getPosts')
+            .then(response => response.json())
+            .then(data => {
+                setPostData(data.posts.map(post => ({
+                    UserImg: post.userId.profilePicture ? `http://localhost:3001/${post.userId.profilePicture}` : img,
+                    name: post.userId.username,
+                    time: new Date(post.createdAt).toLocaleString(),
+                    text: post.content,
+                    img: post.image ? `http://localhost:3001/${post.image}` : '',
+                    upvote: post.upvotes.length,
+                    devote: post.devotes.length,
+                    share: post.shares.length,
+                    comment: post.comments.length,
+                })));
+            })
+            .catch(error => console.error('Error fetching posts:', error));
+    }, []);
 
     return (
         <div className="flex flex-col items-center w-full">

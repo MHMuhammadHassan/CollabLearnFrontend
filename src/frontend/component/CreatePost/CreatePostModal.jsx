@@ -13,7 +13,7 @@ export function CreatePostModal() {
   const [videoFile, setVideoFile] = useState(null);
   const [pdfFile, setPdfFile] = useState(null);
   const [privacy, setPrivacy] = useState("public");
-  
+
   const openModal = () => {
     setIsModalOpen(true);
     document.body.classList.add("modal-open");
@@ -46,16 +46,43 @@ export function CreatePostModal() {
 
           if (maxLabel === 'LABEL_0') {
             alert('OK');
-            
+
             // Proceed with form submission
             console.log({ text: trimmedText, imageFile, videoFile, pdfFile, privacy });
 
-            setText("");
-            setImageFile(null);
-            setVideoFile(null);
-            setPdfFile(null);
-            setPrivacy("public");
-            closeModal();
+            const formData = new FormData();
+            formData.append("content", trimmedText);
+            if (imageFile) formData.append("image", imageFile);
+            if (videoFile) formData.append("video", videoFile);
+            if (pdfFile) formData.append("document", pdfFile);
+
+            fetch("http://localhost:3001/collablearn/user/uploadPost", {
+              method: "POST",
+              headers: {
+                Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MzdkMjEyYzY2NGNkNmQ5ZWNiNDU1MiIsImlhdCI6MTcxNjI2OTk0OCwiZXhwIjoxNzE2ODc0NzQ4fQ.cHBgpmm6ESQcTV80Gsq-Tr5m4cbtvtc12MYturjTNDs` // or however you store the token
+              },
+              body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert("Post uploaded successfully");
+
+                setText("");
+                setImageFile(null);
+                setVideoFile(null);
+                setPdfFile(null);
+                setPrivacy("public");
+                closeModal();
+              } else {
+                alert("Failed to upload post: " + data.message);
+              }
+            })
+            .catch(error => {
+              console.error("Error uploading post:", error);
+              alert("Error uploading post");
+            });
+
           } else {
             let hateMessage;
             if (maxLabel === 'LABEL_1') {
@@ -71,7 +98,7 @@ export function CreatePostModal() {
             alert(hateMessage);
           }
         } else {
-          alert('No results from the API');
+          alert('There is some issue in the Toxic Word Detection Module./n Try Again');
         }
       }, 2000); // Wait for 2 seconds
     } catch (error) {
@@ -258,5 +285,4 @@ export function CreatePostModal() {
     </>
   );
 }
-
 export default CreatePostModal;

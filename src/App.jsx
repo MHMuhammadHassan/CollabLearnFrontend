@@ -1,15 +1,22 @@
-import { Import } from 'lucide-react';
-import './App.css';
-import Sidebar from './frontend/component/SideBar';
-import LeftSidebar from './frontend/LeftSideBar';
-import Header from './frontend/component/Header';
-import { MainPage } from './frontend/Home';
-const App = () => {
+// App.jsx
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { SignIn } from './frontend/SignIn/SignIn';
+//import UserProfile from './frontend/UserProfile/';
+function App() {
   return (
     <>
-     <MainPage/>
-    </>
-  );
+    <Router>
+     
+        <Switch>
+          <Route exact path="/" component={SignIn} />
+          
+        </Switch>
+   </Router>
+    
+    </> 
+    );
 }
 
 export default App;
