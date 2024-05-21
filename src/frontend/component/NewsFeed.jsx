@@ -20,6 +20,8 @@ export function PostCall() {
                     time: new Date(post.createdAt).toLocaleString(),
                     text: post.content,
                     img: post.image ? `http://localhost:3001/${post.image}` : '',
+                    video: post.video ? `http://localhost:3001/${post.video}` : '',
+                    pdf: post.pdf ? `http://localhost:3001/${post.pdf}` : '',
                     upvote: post.upvotes.length,
                     devote: post.devotes.length,
                     share: post.shares.length,
@@ -66,7 +68,7 @@ export function Post(props) {
     };
 
     return (
-        <div className="flex flex-col w-11/12 max-w-5xl bg-white shadow-lg rounded-lg p-4 my-4">
+        <div className="flex flex-col w-full sm:w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 bg-white shadow-lg rounded-lg p-4 my-4">
             <div className="flex items-center border-b border-gray-300 pb-2 mb-4">
                 <img src={postdetail.UserImg} className="w-12 h-12 rounded-full border border-indigo-500" />
                 <div className="ml-4">
@@ -80,6 +82,16 @@ export function Post(props) {
                 {postdetail.img && (
                     <div className="mt-4 flex justify-center">
                         <img src={postdetail.img} alt="" className="w-full max-w-lg h-auto rounded-lg" />
+                    </div>
+                )}
+                {postdetail.video && (
+                    <div className="mt-4 flex justify-center">
+                        <video controls src={postdetail.video} className="w-full max-w-lg h-auto rounded-lg" />
+                    </div>
+                )}
+                {postdetail.pdf && (
+                    <div className="mt-4 flex justify-center">
+                        <embed src={postdetail.pdf} type="application/pdf" className="w-full max-w-lg h-auto rounded-lg" />
                     </div>
                 )}
             </div>

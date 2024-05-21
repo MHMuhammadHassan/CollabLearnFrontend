@@ -6,7 +6,7 @@ import "../App.css";
 
 export function MainPage() {
     return (
-        <div className="flex flex-wrap gap-1 h-screen" style={{width: '100vws'}}>
+        <div className="flex flex-wrap gap-1 h-screen" style={{width: '100vw'}}>
             <div className="flex-none h-full overflow-y-auto custom-scrollbar ">
                 <Sidebar />
             </div>
