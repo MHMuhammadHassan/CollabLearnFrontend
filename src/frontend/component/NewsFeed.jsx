@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
 import img from '../../assets/person_icon.png';
@@ -6,33 +5,51 @@ import img2 from '../../assets/options.png';
 import UV from '../../assets/upvote_icon.png';
 import DV from '../../assets/devote_icon.png';
 import share from '../../assets/share_icon.png';
+import docImg from '../../assets/pdf_icon.png'; // Placeholder image for documents
 
 export function PostCall() {
     const [PostData, setPostData] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         fetch('http://localhost:3001/collablearn/user/getPosts')
             .then(response => response.json())
             .then(data => {
-                setPostData(data.posts.map(post => ({
-                    UserImg: post.userId.profilePicture ? `http://localhost:3001/${post.userId.profilePicture}` : img,
-                    name: post.userId.username,
-                    time: new Date(post.createdAt).toLocaleString(),
-                    text: post.content,
-                    img: post.image ? `http://localhost:3001/${post.image}` : '',
-                    document: post.document ? `http://localhost:3001/${post.document}` : '',
-                    video: post.video ? `http://localhost:3001/${post.video}` : '',
-                    upvote: post.upvotes.length,
-                    devote: post.devotes.length,
-                    share: post.shares.length,
-                    comment: post.comments.length,
-                })));
+                setPostData(data.posts.map(post => {
+                    const documentUrl = post.document ? `http://localhost:3001/${post.document}` : '';
+                    const documentName = post.document ? extractDocumentName(post.document) : '';
+                    return {
+                        UserImg: post.userId.profilePicture ? `http://localhost:3001/${post.userId.profilePicture}` : img,
+                        name: post.userId.username,
+                        time: new Date(post.createdAt).toLocaleString(),
+                        text: post.content,
+                        img: post.image ? `http://localhost:3001/${post.image}` : '',
+                        document: documentUrl,
+                        documentName: documentName,
+                        video: post.video ? `http://localhost:3001/${post.video}` : '',
+                        upvote: post.upvotes.length,
+                        devote: post.devotes.length,
+                        share: post.shares.length,
+                        comment: post.comments.length,
+                    };
+                }));
             })
-            .catch(error => console.error('Error fetching posts:', error));
+            .catch(error => {
+                console.error('Error fetching posts:', error);
+                setError('Error fetching posts');
+            });
     }, []);
+
+    const extractDocumentName = (filePath) => {
+        const fileName = filePath.split('\\').pop();
+        const namePart = fileName.split('-Q-D-H-T-E-')[0];
+        const extension = fileName.split('.').pop();
+        return `${namePart}.${extension}`;
+    };
 
     return (
         <div className="flex flex-col items-center w-full">
+            {error && <div className="text-red-500">{error}</div>}
             {PostData.map((postdetail, index) => (
                 <Post key={index} postdetail={postdetail} />
             ))}
@@ -42,28 +59,28 @@ export function PostCall() {
 
 export function Post(props) {
     const postdetail = props.postdetail;
-    const [upvote, setupvote] = useState(postdetail.upvote);
+    const [upvote, setUpvote] = useState(postdetail.upvote);
     const [checked, setChecked] = useState(false);
-    const [Devote, setDevote] = useState(postdetail.devote);
-    const [Checkeddevote, setCheckeddevote] = useState(false);
+    const [devote, setDevote] = useState(postdetail.devote);
+    const [checkedDevote, setCheckedDevote] = useState(false);
 
-    const vote = () => {
+    const handleUpvote = () => {
         if (checked) {
             setChecked(false);
-            setupvote(upvote - 1);
+            setUpvote(upvote - 1);
         } else {
             setChecked(true);
-            setupvote(upvote + 1); 
+            setUpvote(upvote + 1);
         }
     };
 
-    const fordevote = () => {
-        if (Checkeddevote) {
-            setCheckeddevote(false);
-            setDevote(Devote - 1);
+    const handleDevote = () => {
+        if (checkedDevote) {
+            setCheckedDevote(false);
+            setDevote(devote - 1);
         } else {
-            setCheckeddevote(true);
-            setDevote(Devote + 1); 
+            setCheckedDevote(true);
+            setDevote(devote + 1);
         }
     };
 
@@ -91,22 +108,21 @@ export function Post(props) {
                 )}
                 {postdetail.document && (
                     <div className="mt-4 flex justify-center">
-                        {/* <embed src={postdetail.document} className="w-full max-w-lg h-auto rounded-lg" /> */}
-                        {/* <embed src={postdetail.document + "#toolbar=0"} className="w-full max-w-lg h-auto rounded-lg" /> */}
-
-                        <a href= {postdetail.document}>Your File</a>
-
+                        <a href={postdetail.document} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center border rounded-lg p-2 w-64 bg-gray-100 hover:bg-gray-200">
+                            <img src={docImg} alt="Document" className="w-12 h-12 mb-2" />
+                            <span className="text-center">{postdetail.documentName}</span>
+                        </a>
                     </div>
                 )}
             </div>
             <div className="flex items-center justify-around border-t border-gray-300 pt-2">
                 <div className="flex items-center space-x-2">
-                    <img src={UV} className="w-6 h-6 cursor-pointer" onClick={vote} />
+                    <img src={UV} className="w-6 h-6 cursor-pointer" onClick={handleUpvote} />
                     <span>{upvote}</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                    <img src={DV} className="w-6 h-6 cursor-pointer" onClick={fordevote} />
-                    <span>{Devote}</span>
+                    <img src={DV} className="w-6 h-6 cursor-pointer" onClick={handleDevote} />
+                    <span>{devote}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                     <span>{postdetail.comment}</span>

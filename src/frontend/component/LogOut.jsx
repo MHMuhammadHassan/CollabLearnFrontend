@@ -52,7 +52,7 @@ export function LogOut() {
             <div className="flex items-center p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200">
               <p>Settings & Privacy</p>
             </div>
-            <a href="/signOut">
+            <a href="/">
               <div className="flex items-center p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200">
                 <p>Log out</p>
               </div>
