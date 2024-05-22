@@ -1,6 +1,7 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import '../App.css'; // Make sure to import your Tailwind CSS file
-
+import LogOut from './component/LogOut';
 const LeftSidebar = () => {
   const [activeTab, setActiveTab] = useState('chat');
 
@@ -8,18 +9,8 @@ const LeftSidebar = () => {
   return (
     <aside className= ' bg-white shadow-md border-r h-screen transition-all '>
       {/* Profile Section */}
-      <div className="flex items-center p-4 border-b justify-center">
-        <img
-          src="https://via.placeholder.com/40"
-          alt="Profile"
-          className="rounded-full w-10 h-10 mr-3"
-        />
-        
-          <div>
-            <h4 className="font-semibold">Daniyal Azfar Malik</h4>
-            <p className="text-sm text-gray-500">student</p>
-          </div>
-        
+      <div>
+        <LogOut/>  
       </div>
 
       {/* Activity Section */}
@@ -69,6 +60,7 @@ const LeftSidebar = () => {
   );
 }
 
+// eslint-disable-next-line react/prop-types
 const UserListItem = ({ name }) => (
   <li className="flex items-center p-2 rounded-lg hover:bg-gray-100">
     <img

@@ -56,10 +56,12 @@ export function CreatePostModal() {
             if (videoFile) formData.append("video", videoFile);
             if (pdfFile) formData.append("document", pdfFile);
 
+            const token = localStorage.getItem('token');
+
             fetch("http://localhost:3001/collablearn/user/uploadPost", {
               method: "POST",
               headers: {
-                Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MzdkMjEyYzY2NGNkNmQ5ZWNiNDU1MiIsImlhdCI6MTcxNjI2OTk0OCwiZXhwIjoxNzE2ODc0NzQ4fQ.cHBgpmm6ESQcTV80Gsq-Tr5m4cbtvtc12MYturjTNDs` // or however you store the token
+                Authorization: `${token}` // or however you store the token
               },
               body: formData
             })
